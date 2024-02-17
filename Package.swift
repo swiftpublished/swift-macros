@@ -10,12 +10,12 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "swift-macros",
-            targets: ["swift-macros"]
+            name: "swiftMacrosInterface",
+            targets: ["swiftMacrosInterface"]
         ),
         .executable(
-            name: "swift-macrosClient",
-            targets: ["swift-macrosClient"]
+            name: "swiftMacrosClient",
+            targets: ["swiftMacrosClient"]
         ),
     ],
     dependencies: [
@@ -27,7 +27,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "swift-macrosMacros",
+            name: "swiftMacrosImplementation",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
@@ -35,16 +35,16 @@ let package = Package(
         ),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "swift-macros", dependencies: ["swift-macrosMacros"]),
+        .target(name: "swiftMacrosInterface", dependencies: ["swiftMacrosImplementation"]),
 
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "swift-macrosClient", dependencies: ["swift-macros"]),
+        .executableTarget(name: "swiftMacrosClient", dependencies: ["swiftMacrosInterface"]),
 
         // A test target used to develop the macro implementation.
         .testTarget(
-            name: "swift-macrosTests",
+            name: "swiftMacrosTests",
             dependencies: [
-                "swift-macrosMacros",
+                "swiftMacrosImplementation",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
         ),
