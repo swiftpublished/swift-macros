@@ -2,7 +2,7 @@ import XCTest
 import SwiftSyntaxMacrosTestSupport
 @testable import SwiftMacrosImplementation
 
-final class SwiftMacrosTests: XCTestCase {
+final class PublicInitTests: XCTestCase {
     private let macros = ["PublicInit": PublicInit.self]
 
     func testEmpty() {
@@ -62,6 +62,34 @@ final class SwiftMacrosTests: XCTestCase {
                     id: Int
                 ) {
                     self.id = id
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func testMultipleProperties() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public let id: Int
+                public let name: String
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public let id: Int
+                public let name: String
+
+                public init(
+                    id: Int,
+                    name: String
+                ) {
+                    self.id = id
+                    self.name = name
                 }
             }
             """,
