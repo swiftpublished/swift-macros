@@ -69,6 +69,35 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
+    func testEnum() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public enum Action {
+                case increment
+            }
+            """,
+            expandedSource:
+            """
+            public enum Action {
+                case increment
+            }
+            """,
+            diagnostics: [
+                DiagnosticSpec(
+                    message: "'@PublicInit' can only be applied to a Struct or Class",
+                    line: 1,
+                    column: 1,
+                    severity: .error,
+                    fixIts: [
+                        FixItSpec(message: "Remove '@PublicInit'")
+                    ]
+                )
+            ],
+            macros: macros
+        )
+    }
+
     func testMultipleProperties() {
         assertMacroExpansion(
             """

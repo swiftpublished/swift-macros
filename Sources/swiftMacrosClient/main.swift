@@ -1,7 +1,9 @@
 import SwiftMacrosInterface
 
 /// Xcode Error:
-/// '@PublicInit' can only be applied to a Struct or Class
+/// Diagnostic: '@PublicInit' can only be applied to a Struct or Class
+/// FixIt: Remove '@PublicInit'
+///     Action: Removes '@PublicInit'
 ///
 //@PublicInit
 //enum Direction {
