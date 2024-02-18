@@ -22,6 +22,27 @@ import SwiftMacrosInterface
 /// ```
 ///
 @PublicInit
-public struct State {
+public struct InitializableState {
     public let id: Int
+}
+
+/// Expands to:
+///
+/// ```
+/// public struct CodableState: Codable {
+///     public let id: Int
+///     public let firstName: String
+///
+///     enum CodingKeys: String, CodingKey {
+///         case id
+///         case firstName = "first_name"
+///     }
+/// }
+/// ```
+///
+@CodingKeys
+public struct CodableState: Codable {
+    public let id: Int
+    @CodingKey(name: "first_name")
+    public let firstName: String
 }
