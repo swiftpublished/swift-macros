@@ -16,8 +16,8 @@ let package = Package(
             targets: ["SwiftMacrosInterface"]
         ),
         .executable(
-            name: "SwiftMacrosClient",
-            targets: ["SwiftMacrosClient"]
+            name: "SwiftMacrosUsage",
+            targets: ["SwiftMacrosUsage"]
         )
     ],
     dependencies: [
@@ -40,7 +40,7 @@ let package = Package(
         .target(name: "SwiftMacrosInterface", dependencies: ["SwiftMacrosImplementation"]),
 
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "SwiftMacrosClient", dependencies: ["SwiftMacrosInterface"]),
+        .executableTarget(name: "SwiftMacrosUsage", dependencies: ["SwiftMacrosInterface"]),
 
         // A test target used to develop the macro implementation.
         .testTarget(
