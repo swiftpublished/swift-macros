@@ -1,5 +1,11 @@
 import SwiftSyntax
 import SwiftSyntaxMacros
+import RegexBuilder
+
+public enum CodingKeysStrategy: String {
+    case snake_case
+    case `default`
+}
 
 public enum CodingKeys: MemberMacro {
     public static func expansion(
@@ -26,7 +32,28 @@ public enum CodingKeys: MemberMacro {
 
                 return "case \(propertyName) = \(customKeyValue)"
             } else {
-                return "case \(propertyName)"
+                guard let strategyCase = node
+                    .arguments?.as(LabeledExprListSyntax.self)?.first?
+                    .expression.as(MemberAccessExprSyntax.self)?
+                    .declName.baseName.text else {
+                    return "case \(propertyName)"
+                }
+
+                guard let strategy = CodingKeysStrategy(rawValue: strategyCase) else {
+                    return "case \(propertyName)"
+                }
+
+                switch strategy {
+                case .snake_case:
+                    let keyValue = propertyName.snakeCased()
+                    if keyValue == propertyName {
+                        return "case \(propertyName)"
+                    } else {
+                        return "case \(propertyName) = \"\(keyValue)\""
+                    }
+                case .default:
+                    return "case \(propertyName)"
+                }
             }
         }
 
@@ -48,5 +75,21 @@ public struct CodingKey: PeerMacro {
     ) throws -> [DeclSyntax] {
         // Does nothing, used only to decorate members with data
         return []
+    }
+}
+
+private extension String {
+    func snakeCased() -> String {
+        let capitalLetters = Regex {
+            Capture {
+                "A"..."Z"
+            }
+        }
+
+        let snakeCased = replacing(capitalLetters) { match in
+            "_\(match.output.1.lowercased())"
+        }
+
+        return snakeCased
     }
 }
