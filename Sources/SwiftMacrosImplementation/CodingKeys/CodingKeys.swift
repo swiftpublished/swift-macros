@@ -2,11 +2,6 @@ import SwiftSyntax
 import SwiftSyntaxMacros
 import RegexBuilder
 
-public enum CodingKeysStrategy: String {
-    case snake_case
-    case `default`
-}
-
 public enum CodingKeys: MemberMacro {
     public static func expansion(
         of node: AttributeSyntax,
@@ -39,19 +34,21 @@ public enum CodingKeys: MemberMacro {
                     return "case \(propertyName)"
                 }
 
-                guard let strategy = CodingKeysStrategy(rawValue: strategyCase) else {
+                guard ["snake_case", "default"].contains(strategyCase) else {
                     return "case \(propertyName)"
                 }
 
-                switch strategy {
-                case .snake_case:
+                switch strategyCase {
+                case "snake_case":
                     let keyValue = propertyName.snakeCased()
                     if keyValue == propertyName {
                         return "case \(propertyName)"
                     } else {
                         return "case \(propertyName) = \"\(keyValue)\""
                     }
-                case .default:
+                case "default":
+                    return "case \(propertyName)"
+                default:
                     return "case \(propertyName)"
                 }
             }
