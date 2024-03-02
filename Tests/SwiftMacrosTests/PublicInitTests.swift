@@ -72,6 +72,10 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
+    ///
+    /// - Note
+    /// Use `main` branch of `swift-syntax` in the `Package.swift` dependency
+    ///
     func testEnum() {
         assertMacroExpansion(
             """
@@ -339,6 +343,10 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
+    ///
+    /// - Note
+    /// Use `main` branch of `swift-syntax` in the `Package.swift` dependency
+    ///
     func test_failed_to_infer_type() {
         assertMacroExpansion(
             """
