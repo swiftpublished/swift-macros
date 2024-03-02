@@ -97,7 +97,15 @@ final class PublicInitTests: XCTestCase {
                     ]
                 )
             ],
-            macros: macros
+            macros: macros,
+            applyFixIts: ["Remove '@PublicInit'"],
+            fixedSource:
+            """
+
+            public enum Action {
+                case increment
+            }
+            """
         )
     }
 
@@ -190,6 +198,85 @@ final class PublicInitTests: XCTestCase {
             }
             """,
             macros: macros
+        )
+    }
+
+    func testDefaultValues() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public let id: Int = 1
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public let id: Int = 1
+
+                public init() {
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func testWithoutVariableType() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public let id = 1
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public let id = 1
+
+                public init() {
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func test_Failed_To_Infer_Type() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public var id = "1"
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public var id = "1"
+            }
+            """,
+            diagnostics: [
+                DiagnosticSpec(
+                    message: "Failed to infer the Type",
+                    line: 3,
+                    column: 16,
+                    severity: .error,
+                    fixIts: [
+                        FixItSpec(message: "Specify Type instead")
+                    ]
+                )
+            ],
+            macros: macros,
+            applyFixIts: ["Specify Type instead"],
+            fixedSource:
+            """
+            @PublicInit
+            public struct State {
+                public var id: <#Type#> = "1"
+            }
+            """
         )
     }
 }

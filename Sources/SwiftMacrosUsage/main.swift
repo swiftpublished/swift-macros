@@ -26,6 +26,26 @@ public struct InitializableState {
     public let id: Int
 }
 
+@PublicInit
+public struct InitializableState_WithoutType_Let_Int {
+    public let id = 1
+}
+
+@PublicInit
+public struct InitializableState_WithoutType_Var_Int {
+    public var id = 1
+}
+
+/// Xcode Error:
+/// Diagnostic: Failed to infer the Type
+/// FixIt: Specify Type instead
+///     Action: Adds a `: <#Type#>` in front of the property name
+///
+//@PublicInit
+//public struct InitializableState_WithoutType_Var_String {
+//    public var id = "1"
+//}
+
 /// Expands to:
 ///
 /// ```

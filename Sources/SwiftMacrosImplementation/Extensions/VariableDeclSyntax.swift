@@ -1,10 +1,12 @@
 import SwiftSyntax
 
 extension VariableDeclSyntax {
+    ///
     /// Determine whether this variable has the syntax of a stored property.
     ///
     /// This syntactic check cannot account for semantic adjustments due to,
     /// e.g., accessor macros or property wrappers.
+    ///
     var isStoredProperty: Bool {
         if bindings.count != 1 {
             return false
@@ -33,5 +35,10 @@ extension VariableDeclSyntax {
         case .getter:
             return false
         }
+    }
+
+    var isLetWithDefaultValue: Bool {
+        bindingSpecifier.tokenKind == .keyword(.let) &&
+        bindings.first?.initializer != nil
     }
 }

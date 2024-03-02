@@ -3,8 +3,9 @@ import SwiftDiagnostics
 
 enum PublicInitDiagnostic: String {
     case notApplicable
+    case notInferableType
 
-    func diagnostic(for node: AttributeSyntax) -> Diagnostic {
+    func diagnostic(for node: SyntaxProtocol) -> Diagnostic {
         Diagnostic(
             node: node,
             message: PublicInitDiagnosticMessage(diagnostic: self),
@@ -21,6 +22,8 @@ private extension PublicInitDiagnostic {
             switch diagnostic {
             case .notApplicable:
                 return "'@PublicInit' can only be applied to a Struct or Class"
+            case .notInferableType:
+                return "Failed to infer the Type"
             }
         }
 
@@ -30,10 +33,7 @@ private extension PublicInitDiagnostic {
         }
 
         var severity: DiagnosticSeverity {
-            switch diagnostic {
-            case .notApplicable:
-                return .error
-            }
+            return .error
         }
     }
 
@@ -44,6 +44,8 @@ private extension PublicInitDiagnostic {
             switch diagnostic {
             case .notApplicable:
                 return "Remove '@PublicInit'"
+            case .notInferableType:
+                return "Specify Type instead"
             }
         }
 
@@ -52,16 +54,38 @@ private extension PublicInitDiagnostic {
             return MessageID(domain: "SwiftMacrosImplementation", id: id)
         }
 
-        func fixIts(for node: AttributeSyntax) -> [FixIt] {
+        func fixIts(for node: SyntaxProtocol) -> [FixIt] {
             switch diagnostic {
             case .notApplicable:
-                [
+                return [
                     FixIt(
                         message: self,
                         changes: [
                             .replace(
                                 oldNode: Syntax(node),
                                 newNode: Syntax(TokenSyntax(stringLiteral: ""))
+                            )
+                        ]
+                    )
+                ]
+            case .notInferableType:
+                guard let variableName = node.as(IdentifierPatternSyntax.self) else {
+                    return []
+                }
+
+                return [
+                    FixIt(
+                        message: self,
+                        changes: [
+                            .replace(
+                                oldNode: Syntax(variableName),
+                                newNode: Syntax(
+                                    IdentifierPatternSyntax(
+                                        identifier: .identifier(
+                                            "\(variableName.trimmedDescription): <#Type#> "
+                                        )
+                                    )
+                                )
                             )
                         ]
                     )
