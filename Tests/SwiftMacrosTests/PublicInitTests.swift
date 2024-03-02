@@ -201,7 +201,7 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
-    func testDefaultValues() {
+    func test_default_value_let() {
         assertMacroExpansion(
             """
             @PublicInit
@@ -222,7 +222,7 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
-    func testWithoutVariableType() {
+    func test_default_value_without_variable_type() {
         assertMacroExpansion(
             """
             @PublicInit
@@ -243,7 +243,103 @@ final class PublicInitTests: XCTestCase {
         )
     }
 
-    func test_Failed_To_Infer_Type() {
+    func test_default_value_var() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public var id: Int = 1
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public var id: Int = 1
+
+                public init(
+                    id: Int = 1
+                ) {
+                    self.id = id
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func test_default_value_var_optional_type_with_some_value() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public var id: Int? = 1
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public var id: Int? = 1
+
+                public init(
+                    id: Int? = 1
+                ) {
+                    self.id = id
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func test_default_value_var_optional_type_with_nil() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public var id: Int? = nil
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public var id: Int? = nil
+
+                public init(
+                    id: Int? = nil
+                ) {
+                    self.id = id
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func test_default_value_var_optional_type_with_nil_for_custom_type() {
+        assertMacroExpansion(
+            """
+            @PublicInit
+            public struct State {
+                public var id: SomeType? = nil
+            }
+            """,
+            expandedSource:
+            """
+            public struct State {
+                public var id: SomeType? = nil
+
+                public init(
+                    id: SomeType? = nil
+                ) {
+                    self.id = id
+                }
+            }
+            """,
+            macros: macros
+        )
+    }
+
+    func test_failed_to_infer_type() {
         assertMacroExpansion(
             """
             @PublicInit

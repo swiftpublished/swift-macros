@@ -41,32 +41,40 @@ public struct PublicInit: MemberMacro {
         }
 
         var diagnostic: Diagnostic?
-        let variableTypes = variables.compactMap { variable -> TypeSyntax? in
-            guard let bindings = variable.bindings.first else {
-                return nil
-            }
-
-            if let definedType = bindings.typeAnnotation?.type {
-                return definedType
-            } else {
-                if let inferredType = bindings.initializer?.inferredType {
-                    return inferredType
-                } else {
-                    diagnostic = PublicInitDiagnostic.notInferableType
-                        .diagnostic(for: bindings.pattern)
+        let variableTypesAndDefaultValues = variables
+            .compactMap { variable -> (type: TypeSyntax, defaultValue: InitializerClauseSyntax?)? in
+                guard let bindings = variable.bindings.first else {
                     return nil
                 }
+
+                if let definedType = bindings.typeAnnotation?.type {
+                    return (type: definedType, defaultValue: bindings.initializer)
+                } else {
+                    if let inferredType = bindings.initializer?.inferredType {
+                        return (inferredType, defaultValue: bindings.initializer)
+                    } else {
+                        diagnostic = PublicInitDiagnostic.notInferableType
+                            .diagnostic(for: bindings.pattern)
+                        return nil
+                    }
+                }
             }
-        }
 
         guard diagnostic == nil else {
             context.diagnose(diagnostic!)
             return []
         }
 
-        let argumentsList = zip(variableNames, variableTypes)
-            .map { variableName, variableType in
-                "\(variableName.trimmedDescription): \(variableType.trimmedDescription)"
+        let argumentsList = zip(variableNames, variableTypesAndDefaultValues)
+            .map { variableName, variableTypeAndDefaultValue in
+                let (variableType, defaultInitializer) = variableTypeAndDefaultValue
+                return [
+                    "\(variableName.trimmedDescription):",
+                    variableType.trimmedDescription,
+                    defaultInitializer?.trimmedDescription
+                ]
+                    .compactMap { $0 }
+                    .joined(separator: " ")
             }
             .joined(separator: ",\n")
         let initHeader = "public init(\n" + argumentsList + "\n)"
