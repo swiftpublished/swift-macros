@@ -15,6 +15,9 @@ final class PublicInitTests: XCTestCase {
             expandedSource:
             """
             public struct State {
+
+                public init() {
+                }
             }
             """,
             macros: macros

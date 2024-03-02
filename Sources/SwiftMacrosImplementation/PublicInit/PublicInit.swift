@@ -28,7 +28,7 @@ public struct PublicInit: MemberMacro {
         }
 
         guard !variables.isEmpty else {
-            return []
+            return ["public init() {}"]
         }
 
         let variableNames = variables.compactMap { $0.bindings.first?.pattern }
