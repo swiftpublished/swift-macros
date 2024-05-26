@@ -50,7 +50,7 @@ public struct PublicInit: MemberMacro {
                 if let definedType = bindings.typeAnnotation?.type {
                     return (type: definedType, defaultValue: bindings.initializer)
                 } else {
-                    if let inferredType = bindings.initializer?.inferredType {
+                    if let inferredType = bindings.initializer?.value.inferredType {
                         return (inferredType, defaultValue: bindings.initializer)
                     } else {
                         diagnostic = PublicInitDiagnostic.notInferableType

@@ -36,6 +36,21 @@ public struct InitializableState_WithoutType_Var_Int {
     public var id = 1
 }
 
+@PublicInit
+public struct InitializableState_WithoutType_Var_Float {
+    public var id = 0.1
+}
+
+@PublicInit
+public struct InitializableState_WithoutType_Var_Double {
+    public var id = 0.12345678
+}
+
+@PublicInit
+public struct InitializableState_WithoutType_Var_Array_Of_Int {
+    public var id = [1]
+}
+
 /// Xcode Error:
 /// Diagnostic: Failed to infer the Type
 /// FixIt: Specify Type instead

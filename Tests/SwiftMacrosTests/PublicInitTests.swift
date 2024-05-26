@@ -76,6 +76,42 @@ final class PublicInitTests: XCTestCase {
     /// - Note
     /// Use `main` branch of `swift-syntax` in the `Package.swift` dependency
     ///
+//    func testEnum() {
+//        assertMacroExpansion(
+//            """
+//            @PublicInit
+//            public enum Action {
+//                case increment
+//            }
+//            """,
+//            expandedSource:
+//            """
+//            public enum Action {
+//                case increment
+//            }
+//            """,
+//            diagnostics: [
+//                DiagnosticSpec(
+//                    message: "'@PublicInit' can only be applied to a Struct or Class",
+//                    line: 1,
+//                    column: 1,
+//                    severity: .error,
+//                    fixIts: [
+//                        FixItSpec(message: "Remove '@PublicInit'")
+//                    ]
+//                )
+//            ],
+//            macros: macros,
+//            applyFixIts: ["Remove '@PublicInit'"],
+//            fixedSource:
+//            """
+//
+//            public enum Action {
+//                case increment
+//            }
+//            """
+//        )
+//    }
     func testEnum() {
         assertMacroExpansion(
             """
@@ -101,15 +137,7 @@ final class PublicInitTests: XCTestCase {
                     ]
                 )
             ],
-            macros: macros,
-            applyFixIts: ["Remove '@PublicInit'"],
-            fixedSource:
-            """
-
-            public enum Action {
-                case increment
-            }
-            """
+            macros: macros
         )
     }
 
@@ -347,6 +375,42 @@ final class PublicInitTests: XCTestCase {
     /// - Note
     /// Use `main` branch of `swift-syntax` in the `Package.swift` dependency
     ///
+//    func test_failed_to_infer_type() {
+//        assertMacroExpansion(
+//            """
+//            @PublicInit
+//            public struct State {
+//                public var id = "1"
+//            }
+//            """,
+//            expandedSource:
+//            """
+//            public struct State {
+//                public var id = "1"
+//            }
+//            """,
+//            diagnostics: [
+//                DiagnosticSpec(
+//                    message: "Failed to infer the Type",
+//                    line: 3,
+//                    column: 16,
+//                    severity: .error,
+//                    fixIts: [
+//                        FixItSpec(message: "Specify Type instead")
+//                    ]
+//                )
+//            ],
+//            macros: macros,
+//            applyFixIts: ["Specify Type instead"],
+//            fixedSource:
+//            """
+//            @PublicInit
+//            public struct State {
+//                public var id: <#Type#> = "1"
+//            }
+//            """
+//        )
+//    }
     func test_failed_to_infer_type() {
         assertMacroExpansion(
             """
@@ -372,15 +436,7 @@ final class PublicInitTests: XCTestCase {
                     ]
                 )
             ],
-            macros: macros,
-            applyFixIts: ["Specify Type instead"],
-            fixedSource:
-            """
-            @PublicInit
-            public struct State {
-                public var id: <#Type#> = "1"
-            }
-            """
+            macros: macros
         )
     }
 }
