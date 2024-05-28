@@ -55,7 +55,7 @@ public enum CodingKeys: MemberMacro {
         }
 
         let codingKeys: DeclSyntax = """
-        enum CodingKeys: String, CodingKey {
+        enum CodingKeys: String, Swift.CodingKey {
             \(raw: cases.joined(separator: "\n"))
         }
         """
