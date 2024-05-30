@@ -1,5 +1,5 @@
 @attached(member, names: named(init))
-public macro PublicInit() = #externalMacro(module: "SwiftMacrosImplementation", type: "PublicInit")
+public macro PublicInit() = #externalMacro(module: "MacrosImplementation", type: "PublicInit")
 
 public enum CodingKeysStrategy: String {
     case snake_case
@@ -7,7 +7,7 @@ public enum CodingKeysStrategy: String {
 }
 
 @attached(member, names: named(CodingKeys))
-public macro CodingKeys(using: CodingKeysStrategy = .default) = #externalMacro(module: "SwiftMacrosImplementation", type: "CodingKeys")
+public macro CodingKeys(using: CodingKeysStrategy = .default) = #externalMacro(module: "MacrosImplementation", type: "CodingKeys")
 
 @attached(peer)
-public macro CodingKey(name: String) = #externalMacro(module: "SwiftMacrosImplementation", type: "CodingKey")
+public macro CodingKey(name: String) = #externalMacro(module: "MacrosImplementation", type: "CodingKey")

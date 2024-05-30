@@ -13,11 +13,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "MacrosInterface",
-            targets: ["Interface"]
-        ),
-        .executable(
-            name: "MacrosExe",
-            targets: ["Exe"]
+            targets: ["MacrosInterface"]
         )
     ],
     dependencies: [
@@ -30,7 +26,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "Implementation",
+            name: "MacrosImplementation",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
@@ -40,23 +36,23 @@ let package = Package(
 
         // Library that exposes a macro as part of its API, which is used in client programs.
         .target(
-            name: "Interface",
-            dependencies: ["Implementation"],
+            name: "MacrosInterface",
+            dependencies: ["MacrosImplementation"],
             path: "Sources/Interface"
         ),
 
         // A client of the library, which is able to use the macro in its own code.
         .executableTarget(
-            name: "Exe",
-            dependencies: ["Interface"],
+            name: "MacrosExe",
+            dependencies: ["MacrosInterface"],
             path: "Sources/Exe"
         ),
 
         // A test target used to develop the macro implementation.
         .testTarget(
-            name: "ImplementationTests",
+            name: "MacrosImplementationTests",
             dependencies: [
-                "Implementation",
+                "MacrosImplementation",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ],
             path: "Tests/ImplementationTests"
