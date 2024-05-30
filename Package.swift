@@ -12,17 +12,17 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "SwiftMacrosInterface",
-            targets: ["SwiftMacrosInterface"]
+            name: "MacrosInterface",
+            targets: ["Interface"]
         ),
         .executable(
-            name: "SwiftMacrosUsage",
-            targets: ["SwiftMacrosUsage"]
+            name: "MacrosExe",
+            targets: ["Exe"]
         )
     ],
     dependencies: [
         // Depend on the Swift 5.10 release of SwiftSyntax
-//        .package(url: "https://github.com/apple/swift-syntax.git", branch: "main")
+        //        .package(url: "https://github.com/apple/swift-syntax.git", branch: "main")
         .package(url: "https://github.com/apple/swift-syntax.git", exact: "510.0.2")
     ],
     targets: [
@@ -30,26 +30,36 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "SwiftMacrosImplementation",
+            name: "Implementation",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-            ]
+            ],
+            path: "Sources/Implementation"
         ),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "SwiftMacrosInterface", dependencies: ["SwiftMacrosImplementation"]),
+        .target(
+            name: "Interface",
+            dependencies: ["Implementation"],
+            path: "Sources/Interface"
+        ),
 
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "SwiftMacrosUsage", dependencies: ["SwiftMacrosInterface"]),
+        .executableTarget(
+            name: "Exe",
+            dependencies: ["Interface"],
+            path: "Sources/Exe"
+        ),
 
         // A test target used to develop the macro implementation.
         .testTarget(
-            name: "SwiftMacrosTests",
+            name: "ImplementationTests",
             dependencies: [
-                "SwiftMacrosImplementation",
+                "Implementation",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-            ]
+            ],
+            path: "Tests/ImplementationTests"
         )
     ]
 )
