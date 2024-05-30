@@ -1,4 +1,4 @@
-import SwiftMacrosInterface
+import MacrosInterface
 
 /// Xcode Error:
 /// Diagnostic: '@PublicInit' can only be applied to a Struct or Class

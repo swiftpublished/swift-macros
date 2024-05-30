@@ -1,6 +1,6 @@
 import XCTest
 import SwiftSyntaxMacrosTestSupport
-@testable import SwiftMacrosImplementation
+@testable import MacrosImplementation
 
 final class PublicInitTests: XCTestCase {
     private let macros = ["PublicInit": PublicInit.self]

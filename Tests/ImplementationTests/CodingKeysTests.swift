@@ -1,7 +1,7 @@
 import XCTest
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
-@testable import SwiftMacrosImplementation
+@testable import MacrosImplementation
 
 final class CodingKeysTests: XCTestCase {
     private let macros: [String: Macro.Type] = [
