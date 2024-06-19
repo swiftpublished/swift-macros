@@ -26,40 +26,119 @@ public struct InitializableState {
     public let id: Int
 }
 
+/// Expands to:
+///
+/// ```
+/// public init() {
+/// }
+/// ```
+///
 @PublicInit
-public struct InitializableState_WithoutType_Let_Int {
+public struct InitializableState_With_Default_Value_Of_Let {
+    public let id: Int = 1
+}
+
+/// Expands to:
+///
+/// ```
+/// public init(
+///     id: Int = 1
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
+@PublicInit
+public struct InitializableState_With_Default_Value_Of_Var {
+    public var id: Int = 1
+}
+
+/// Expands to:
+///
+/// ```
+/// public init() {
+/// }
+/// ```
+///
+@PublicInit
+public struct InitializableState_With_Default_Value_Of_Let_WithoutType {
     public let id = 1
 }
 
+/// Expands to:
+///
+/// ```
+/// public init(
+///     id: Int = 1
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
 @PublicInit
-public struct InitializableState_WithoutType_Var_Int {
+public struct InitializableState_With_Default_Value_Of_Var_WithoutType {
     public var id = 1
 }
 
+/// Expands to:
+///
+/// ```
+/// public init(
+///     id: Double = 0.1
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
 @PublicInit
-public struct InitializableState_WithoutType_Var_Float {
+public struct InitializableState_With_Default_Value_Of_Var_Float_WithoutType {
     public var id = 0.1
 }
 
+/// Expands to:
+///
+/// ```
+/// public init(
+///     id: Double = 0.12345678
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
 @PublicInit
-public struct InitializableState_WithoutType_Var_Double {
+public struct InitializableState_With_Default_Value_Of_Var_Double_WithoutType {
     public var id = 0.12345678
 }
 
+/// Expands to:
+///
+/// ```
+/// public init(
+///     id: [Int] = [1]
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
 @PublicInit
-public struct InitializableState_WithoutType_Var_Array_Of_Int {
+public struct InitializableState_With_Default_Value_Of_Var_Array_WithoutType {
     public var id = [1]
 }
 
-/// Xcode Error:
-/// Diagnostic: Failed to infer the Type
-/// FixIt: Specify Type instead
-///     Action: Adds a `: <#Type#>` in front of the property name
+/// Expands to:
 ///
-//@PublicInit
-//public struct InitializableState_WithoutType_Var_String {
-//    public var id = "1"
-//}
+/// ```
+/// public init(
+///     id: String = "1"
+/// ) {
+///     self.id = id
+/// }
+/// ```
+///
+@PublicInit
+public struct InitializableState_With_Default_Value_Of_Var_String_WithoutType {
+    public var id = "1"
+}
 
 /// Expands to:
 ///
